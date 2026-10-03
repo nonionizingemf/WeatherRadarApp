@@ -1,0 +1,26 @@
+NOAA Weather Dash Android v2.0.6
+
+RECOMMENDED LOCAL TOOLCHAIN
+- Android Studio with Android SDK Platform 35 installed
+- JDK 17
+- Android Gradle Plugin 8.6.1
+- Gradle 8.7.3 (pinned via Gradle Wrapper)
+- Minimum Android: 8.0 (API 26)
+- Target SDK: 35
+
+BUILD
+1. Open this android folder in Android Studio.
+2. Set Gradle JDK to JDK 17 (Android Studio's bundled JDK 17 is fine).
+3. Make sure Gradle distribution is set to Gradle Wrapper.
+4. Run:
+   gradlew.bat --version
+   gradlew.bat :app:assembleDebug
+
+The APK will be at:
+app\\build\\outputs\\apk\\debug\\app-debug.apk
+
+The included wrapper files are:
+- gradlew
+- gradlew.bat
+- gradle/wrapper/gradle-wrapper.properties
+- gradle/wrapper/gradle-wrapper.jar
