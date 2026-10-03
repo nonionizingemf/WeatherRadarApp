@@ -1,4 +1,6 @@
-plugins { id 'com.android.application' }
+plugins {
+    id 'com.android.application'
+}
 
 android {
     namespace 'com.noaaweatherdash'
@@ -6,14 +8,37 @@ android {
 
     defaultConfig {
         applicationId 'com.noaaweatherdash.android'
-        minSdk 26
+        minSdk 23
         targetSdk 35
-        versionCode 6
-        versionName '2.0.6'
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        versionCode 209
+        versionName '2.0.9'
     }
 }
+
+def leafletDir = file('src/main/assets')
+def leafletJs = file('src/main/assets/leaflet.js')
+def leafletCss = file('src/main/assets/leaflet.css')
+
+tasks.register('downloadLeafletAssets') {
+    outputs.files(leafletJs, leafletCss)
+    doLast {
+        leafletDir.mkdirs()
+        def assets = [
+            (leafletJs): 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+            (leafletCss): 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+        ]
+        assets.each { target, url ->
+            if (!target.exists() || target.length() < 1000) {
+                logger.lifecycle("Downloading Leaflet 1.9.4 asset: ${target.name}")
+                try {
+                    new URL(url).withInputStream { input -> target.withOutputStream { output -> output << input } }
+                } catch (Exception e) {
+                    target.delete()
+                    throw new GradleException("Unable to download ${url}. Internet access is required once to bundle Leaflet into the APK.", e)
+                }
+            }
+        }
+    }
+}
+
+tasks.named('preBuild').configure { dependsOn('downloadLeafletAssets') }
